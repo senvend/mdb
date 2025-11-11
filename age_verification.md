@@ -38,7 +38,7 @@ While only one type of response is allowed, the SENVEND terminal supports both *
 
 The VMC will see it as such, and send messages for both types of device on the MDB bus. The SENVEND terminal will accept and handle both types of messages. In the ***Embedded*** mode, the VMC will see the terminal for what it actually is: As a cashless payment device with age verification capabilities.
 
-**You only need to support one of these modes.** If your VMC supports it, the ***Embedded*** mode is probably the better choice. That said, it really doesn't matter too which one you support, as long as it is implemented properly. Make sure to **configure both, your VMC and the SENVEND terminal,** to use the right mode.
+**You only need to support one of these modes.** If your VMC supports it, the ***Embedded*** mode is probably the better choice. That said, it really doesn't matter too much which one you support, as long as it is implemented properly. Make sure to **configure both, your VMC and the SENVEND terminal,** to use the right mode.
 
 ### Embedded Age Verification
 

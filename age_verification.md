@@ -100,12 +100,14 @@ The **DRAVP** command sequence may be sent at any other time during initializati
 |POLL|VEND_APPROVED|-|
 |VEND_SUCCESS|ACK|-|
 
+
 #### Embedded Age Verification(Failure)
 
 |VMC|SENVEND Terminal|Action|
 |:---:|:----------------:|:------------------------:|
 |DRAVS|ACK|User is prompted for age verification with age limit set by DRAVP|
 |POLL|DRAVS|Terminal switches back to idle state|
+
 
 #### Embedded Age Verification, Changing Age
 
@@ -118,6 +120,7 @@ The **DRAVP** command sequence may be sent at any other time during initializati
 |VEND_REQUEST|ACK |Terminal switches to payment mode|
 |POLL |VEND_APPROVED|-|
 |VEND_SUCCESS|ACK |-|
+
 
 ### Dedicated Age Verification
 
@@ -136,6 +139,7 @@ For the initialization sequence of the **Age verification Device**, please refer
 |POLL |VEND_APPROVED|-|
 |VEND_SUCCESS|ACK|-|
 
+
 ### Aborting A Requested Age Verification(Age Off)
 
 |VMC|SENVEND Terminal|Action|
@@ -145,6 +149,7 @@ For the initialization sequence of the **Age verification Device**, please refer
 |DRAVS|ACK|User is prompted for age verification with age limit set by DRAVP|
 |DRAVP(Age=`00h`)|ACK|Age verification is aborted, terminal switches back to idle state|
 |POLL|DRAVP|-|
+
 
 ### Aborting A Requested Age Verification(Age SupportedWillBeSwitchedOn)
 
@@ -156,6 +161,7 @@ For the initialization sequence of the **Age verification Device**, please refer
 |DRAVP(Age=`ffh`)|ACK|Age verification is aborted, terminal switches back to idle state|
 |POLL|DRAVP|-|
 
+
 ### Aborting A Requested Age Verification(User Presses Back Button)
 
 |VMC|SENVEND Terminal|Action|
@@ -165,6 +171,8 @@ For the initialization sequence of the **Age verification Device**, please refer
 |DRAVS|ACK|User is prompted for age verification with age limit set by DRAVP|
 |-|-|User presses back button|
 |POLL|DRAVS|Age not approved because of abort|
+
+
 ### Additional Examples
 
 #### Raw MDB bytes (without ACKs, POLLs, and message checksums)

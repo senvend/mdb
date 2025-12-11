@@ -164,7 +164,7 @@ For the initialization sequence of the **Age verification Device**, please refer
 |POLL|DRAVP|-|
 |DRAVS|ACK|User is prompted for age verification with age limit set by DRAVP|
 |-|-|User presses back button|
-|POLL|DRAVS|-|
+|POLL|DRAVS|Age not approved because of abort|
 ### Additional Examples
 
 #### Raw MDB bytes (without ACKs, POLLs, and message checksums)

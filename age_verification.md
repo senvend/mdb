@@ -57,14 +57,15 @@ An Example of the age verification prompt can be found in the [screenshot sectio
 
 When the VMC has sent a **DRAVS** command to request an age verification, the SENVEND terminal will wait and show a prompt to the user, until the age verification is completed (either successfully or unsuccessfully). In some cases, the VMC might want to abort this process, for example when the user has changed their mind and selected a different product that does not require age verification.
 
-The SENVEND terminal supports 3 ways to abort a requested age verification:
+The SENVEND terminal supports 5 ways to abort a requested age verification:
 
 1. The VMC can send a **VendRequest** command, which will cause the SENVEND terminal to switch into payment mode. [Example flow](#aborting-a-requested-age-verificationvend-request)
 1. The VMC can send a **DRAVP** command with age set to `00h` (Age Off). This will cause the SENVEND terminal to abort any ongoing age verification and switch back to its idle state. [Example flow](#aborting-a-requested-age-verificationage-off)
 1. The VMC can send a **DRAVP** command with age set to `ffh` (Age SupportedWillBeSwitchedOn). This will also cause the SENVEND terminal to abort the ongoing process and switch back to its idle state. [Example flow](#aborting-a-requested-age-verificationage-supportedwillbeswitchedon)
 1. If the VMC resets the SENVEND terminal, by sending a **RESET** command, any ongoing age verification process will be aborted.
+1. The user can press the back button ([a little arrow at the top left of the screen][1]) on the age verification prompt screen to cancel the age verification process. This will switch the terminal back to its idle state. This will cause the SENVEND terminal to send a **DRAVS** response to the VMC, indicating that the user is not allowed to buy the age restricted product. [Example flow](#aborting-a-requested-age-verificationuser-presses-back-button)
 
-**NOTE:** If an age verification process was aborted by options 2 or 3, it is required that the VMC sends an additional **DRAVP** command with the new age, before sending another **DRAVS** command. Sending **DRAVP** with age set to either `00h` or `ffh` will reset the previously provided age limit. Addintionally note, that the 4th option(RESET) is only a backup, in case somthing goes wrong. You **should not** use a **RESET** command by design to abort an age verification process.
+**NOTE:** If an age verification process was aborted by options 2 or 3, it is required that the VMC sends an additional **DRAVP** command with the new age, before sending another **DRAVS** command. Sending **DRAVP** with age set to either `00h` or `ffh` will reset the previously provided age limit. Additionally note, that the 5th option (RESET) is only a backup, in case something goes wrong. You **should not** use a **RESET** command by design to abort an age verification process.
 
 ## Examples
 
@@ -99,12 +100,14 @@ The **DRAVP** command sequence may be sent at any other time during initializati
 |POLL|VEND_APPROVED|-|
 |VEND_SUCCESS|ACK|-|
 
+
 #### Embedded Age Verification(Failure)
 
 |VMC|SENVEND Terminal|Action|
 |:---:|:----------------:|:------------------------:|
 |DRAVS|ACK|User is prompted for age verification with age limit set by DRAVP|
 |POLL|DRAVS|Terminal switches back to idle state|
+
 
 #### Embedded Age Verification, Changing Age
 
@@ -117,6 +120,7 @@ The **DRAVP** command sequence may be sent at any other time during initializati
 |VEND_REQUEST|ACK |Terminal switches to payment mode|
 |POLL |VEND_APPROVED|-|
 |VEND_SUCCESS|ACK |-|
+
 
 ### Dedicated Age Verification
 
@@ -135,6 +139,7 @@ For the initialization sequence of the **Age verification Device**, please refer
 |POLL |VEND_APPROVED|-|
 |VEND_SUCCESS|ACK|-|
 
+
 ### Aborting A Requested Age Verification(Age Off)
 
 |VMC|SENVEND Terminal|Action|
@@ -145,6 +150,7 @@ For the initialization sequence of the **Age verification Device**, please refer
 |DRAVP(Age=`00h`)|ACK|Age verification is aborted, terminal switches back to idle state|
 |POLL|DRAVP|-|
 
+
 ### Aborting A Requested Age Verification(Age SupportedWillBeSwitchedOn)
 
 |VMC|SENVEND Terminal|Action|
@@ -154,6 +160,18 @@ For the initialization sequence of the **Age verification Device**, please refer
 |DRAVS|ACK|User is prompted for age verification with age limit set by DRAVP|
 |DRAVP(Age=`ffh`)|ACK|Age verification is aborted, terminal switches back to idle state|
 |POLL|DRAVP|-|
+
+
+### Aborting A Requested Age Verification(User Presses Back Button)
+
+|VMC|SENVEND Terminal|Action|
+|:----------:|:-----------:|:------------------------:|
+|DRAVP|ACK|-|
+|POLL|DRAVP|-|
+|DRAVS|ACK|User is prompted for age verification with age limit set by DRAVP|
+|-|-|User presses back button|
+|POLL|DRAVS|Age not approved because of abort|
+
 
 ### Additional Examples
 

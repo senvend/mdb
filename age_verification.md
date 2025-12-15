@@ -65,7 +65,7 @@ The SENVEND terminal supports 5 ways to abort a requested age verification:
 1. If the VMC resets the SENVEND terminal, by sending a **RESET** command, any ongoing age verification process will be aborted.
 1. The user can press the back button ([a little arrow at the top left of the screen][1]) on the age verification prompt screen to cancel the age verification process. This will switch the terminal back to its idle state. This will cause the SENVEND terminal to send a **DRAVS** response to the VMC, indicating that the user is not allowed to buy the age restricted product. [Example flow](#aborting-a-requested-age-verificationuser-presses-back-button)
 
-**NOTE:** If an age verification process was aborted by options 2 or 3, it is required that the VMC sends an additional **DRAVP** command with the new age, before sending another **DRAVS** command. Sending **DRAVP** with age set to either `00h` or `ffh` will reset the previously provided age limit. Addintionally note, that the 4th option(RESET) is only a backup, in case somthing goes wrong. You **should not** use a **RESET** command by design to abort an age verification process.
+**NOTE:** If an age verification process was aborted by options 2 or 3, it is required that the VMC sends an additional **DRAVP** command with the new age, before sending another **DRAVS** command. Sending **DRAVP** with age set to either `00h` or `ffh` will reset the previously provided age limit. Additionally note, that the 5th option (RESET) is only a backup, in case something goes wrong. You **should not** use a **RESET** command by design to abort an age verification process.
 
 ## Examples
 

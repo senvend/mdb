@@ -8,3 +8,4 @@ You are also welcome to contribute directly by opening Pull Requests.
 ## Index
 
 [Age Verification](age_verification.md)
+[Cashless](cashless.md)

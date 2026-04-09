@@ -13,6 +13,6 @@ The SENVEND terminal provides the following values during the initialization seq
 - Manufacturer Code: `SEN`
 - Serial Number: `xxx-xxx-xxx␠` (unique per device. Is equal to the S/N printed on the white label on the back of the terminal)
 - Model Number: `UX700␠␠␠␠␠␠␠` (note the spaces to fill 12 characters)
-- Software Version: Will contain the current softwrare version formatted as described in the [MDB specification][1]
+- Software Version: Will contain the current software version formatted as described in the [MDB specification][1]
 
 [1]: https://www.namanow.org/wp-content/uploads/Multi-Drop-Bus-and-Internal-Communication-Protocol.pdf

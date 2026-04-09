@@ -199,15 +199,15 @@ data from VMC: [17h, 04h, 00h, 00h, 00h, 20h]
 // Reader enable
 data from VMC: [14h, 01h]
 // DRAVS
-Got data from mdb: [17h, ffh, 06h, 06h, 00h, 44h, 52h, 41h, 56h, 53h]
+data from VMC: [17h, ffh, 06h, 06h, 00h, 44h, 52h, 41h, 56h, 53h]
 // DRAVS response(age approved)
 Sending cashless to VMC: [ffh, 06h, 07h, 9fh, 10h, 44h, 52h, 41h, 56h, 53h]
 // Vend request
-Got data from mdb: [13h, 00h, 00h, 3ch, 00, 0bh]
+data from VMC: [13h, 00h, 00h, 3ch, 00, 0bh]
 // Vend approved
 Sending cashless to VMC: [05h, 00h, 3ch]
 // Vend success
-Got data from mdb: [13h, 02h, 00h, 0bh]
+data from VMC: [13h, 02h, 00h, 0bh]
 ```
 
 ## Screenshots

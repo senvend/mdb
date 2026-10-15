@@ -26,4 +26,8 @@ If the SENVEND terminal is used in Feature Level 3 (will be used automatically i
 
 Note: Not all features may be enabled by every SENVEND terminal. That depends on the terminal configuration. The terminal will only report the features as supported, that are actually enbaled on the terminal. As described in the [MDB specification][1], the vending machine should never enable features in the `Enbale Options` command, that were not reported as supported by the terminal in the `Peripheral ID` response.
 
+## EVA-DTS File Transfer via FTL
+
+The cashless device can also be used to transfer EVA-DTS files via the MDB File Transport Layer. This is described in [File Transport Layer (FTL)](ftl.md).
+
 [1]: https://www.namanow.org/wp-content/uploads/Multi-Drop-Bus-and-Internal-Communication-Protocol.pdf

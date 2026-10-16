@@ -23,6 +23,7 @@ If the SENVEND terminal is used in Feature Level 3 (will be used automatically i
 - Basket/Partial Refund/Options Price
 - 16-bit and 32-bit monetary format
 - Remote Vend
+- File Transport Layer (FTL), see [EVA-DTS File Transfer via FTL](#eva-dts-file-transfer-via-ftl)
 
 Note: Not all features may be enabled by every SENVEND terminal. That depends on the terminal configuration. The terminal will only report the features as supported, that are actually enabled on the terminal. As described in the [MDB specification][1], the vending machine should never enable features in the `EXPANSION_ENABLE_OPTIONS` command, that were not reported as supported by the terminal in the `PERIPHERAL_ID` response.
 
@@ -271,5 +272,9 @@ cashless to VMC: [07h, 07h]
 // ACK
 data from VMC: [00h]
 ```
+
+## EVA-DTS File Transfer via FTL
+
+The cashless device can also be used to transfer EVA-DTS files via the MDB File Transport Layer. This is described in [File Transport Layer (FTL)](ftl.md).
 
 [1]: https://www.namanow.org/wp-content/uploads/Multi-Drop-Bus-and-Internal-Communication-Protocol.pdf

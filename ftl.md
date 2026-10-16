@@ -75,24 +75,32 @@ In both directions, the VMC must keep polling and servicing other peripherals du
 
 ### EVA-DTS Transfer SENVEND Terminal -> VMC
 
-Files sent by the SENVEND terminal are laid out as follows:
+Files sent by the SENVEND terminal are laid out as defined in the [MDB specification][1]:
 
-- Every block carries 31 bytes. The last data block is padded with `00h` bytes.
-- The transfer is terminated by a block of 31 `00h` bytes.
-- The Length in `FTL_REQ_TO_SEND` is the number of data blocks **plus the terminating block**.
+- Every block carries 31 bytes, except the last data block, which carries the rest of the file (1 - 31 bytes).
+- The transfer is terminated by an empty `FTL_SEND_BLOCK` (no data).
+- The Length in `FTL_REQ_TO_SEND` is the number of data blocks, the terminating block is not counted.
 - The file must fit into a single FTL session (at most 254 data blocks).
 
-The example sends the price update file from [Setting Prices in the VMC](#setting-prices-in-the-vmc) (without `ID1`), which fills exactly 3 blocks, so Length = `04h`.
+The example sends the price update file from [Setting Prices in the VMC](#setting-prices-in-the-vmc) (without `ID1`), which fills exactly 3 blocks, so Length = `03h`.
 
 |VMC|SENVEND Terminal|Action|
 |:---:|:----------------:|:------------------------:|
-|POLL|FTL_REQ_TO_SEND(Dest=`00h`, Src=`10h`, File ID=`01h`, Length=`04h`, Control=`02h`)|Terminal offers a file of 3 data blocks + terminating block|
+|POLL|FTL_REQ_TO_SEND(Dest=`00h`, Src=`10h`, File ID=`01h`, Length=`03h`, Control=`02h`)|Terminal offers a file of 3 data blocks|
 |FTL_OK_TO_SEND(Dest=`10h`, Src=`00h`)|FTL_SEND_BLOCK(Dest=`00h`, Block=`00h`, Data=31 bytes)|VMC accepts the transfer, the first block is the response|
 |POLL|FTL_SEND_BLOCK(Dest=`00h`, Block=`01h`, Data=31 bytes)|-|
-|POLL|FTL_SEND_BLOCK(Dest=`00h`, Block=`02h`, Data=31 bytes)|Last data block (ends with the `DXE` record)|
-|POLL|FTL_SEND_BLOCK(Dest=`00h`, Block=`03h`, Data=31 × `00h`)|Terminating block, transfer is complete|
+|POLL|FTL_SEND_BLOCK(Dest=`00h`, Block=`02h`, Data=1-31 bytes)|Last data block (ends with the `DXE` record)|
+|POLL|FTL_SEND_BLOCK(Dest=`00h`, Block=`03h`, no data)|Empty block, transfer is complete|
 
 **Instead of a POLL**, the VMC may also request each following block with another `FTL_OK_TO_SEND`. The terminal answers it with the next block in the same way.
+
+**NOTE:** If the VMC identified itself as GPE (manufacturer code `GPE`), or the terminal is configured for a GPE VMC, the blocks are laid out differently:
+
+- Every block carries 31 bytes. The last data block is padded with `00h` bytes.
+- The transfer is terminated by a block of 31 `00h` bytes instead of the empty block.
+- The Length in `FTL_REQ_TO_SEND` is the number of data blocks **plus the terminating block** (`04h` in the example above).
+
+The terminal learns the manufacturer from the identification the VMC sends to the cashless device (or the age verification device). A file offered via the Communications Gateway, before the VMC identified itself to one of them, is sent as defined in the [MDB specification][1].
 
 If the VMC can't accept the file, it answers the `FTL_REQ_TO_SEND` with `FTL_RETRY_DENY(Dest=10h, Src=00h, Retry Delay)` instead of `FTL_OK_TO_SEND`. The terminal **ACK**s it and drops the offered file. The same applies, if the VMC sends `FTL_RETRY_DENY` during the transfer.
 
@@ -154,7 +162,7 @@ DXE*1*1
 // POLL
 data from VMC: [12h, 12h]
 // FTL REQ TO SEND (POLL response)
-cashless to VMC: [1fh, 00h, 10h, 01h, 04h, 02h, 36h]
+cashless to VMC: [1fh, 00h, 10h, 01h, 03h, 02h, 35h]
 data from VMC: [00h]  // ACK
 // FTL OK TO SEND
 data from VMC: [17h, fdh, 10h, 00h, 24h]
@@ -173,8 +181,8 @@ cashless to VMC: [1dh, 00h, 02h, 0ah, 47h, 38h, 35h, 2ah, 32h, 41h, 42h, 30h, 0d
 data from VMC: [00h]  // ACK
 // POLL
 data from VMC: [12h, 12h]
-// FTL SEND BLOCK #3 (POLL response, terminating block of 31 zero bytes)
-cashless to VMC: [1dh, 00h, 03h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 20h]
+// FTL SEND BLOCK #3 (POLL response, empty, end of transfer)
+cashless to VMC: [1dh, 00h, 03h, 20h]
 data from VMC: [00h]  // ACK
 
 // ---- VMC -> SENVEND Terminal (audit data) ----
@@ -214,7 +222,7 @@ data from VMC: [00h]  // ACK
 // POLL
 data from VMC: [1ah, 1ah]
 // FTL REQ TO SEND (POLL response)
-gateway to VMC: [1fh, 00h, 18h, 01h, 04h, 02h, 3eh]
+gateway to VMC: [1fh, 00h, 18h, 01h, 03h, 02h, 3dh]
 data from VMC: [00h]  // ACK
 // FTL OK TO SEND
 data from VMC: [1fh, fdh, 18h, 00h, 34h]
@@ -233,8 +241,8 @@ gateway to VMC: [1dh, 00h, 02h, 0ah, 47h, 38h, 35h, 2ah, 32h, 41h, 42h, 30h, 0dh
 data from VMC: [00h]  // ACK
 // POLL
 data from VMC: [1ah, 1ah]
-// FTL SEND BLOCK #3 (POLL response, terminating block of 31 zero bytes)
-gateway to VMC: [1dh, 00h, 03h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 20h]
+// FTL SEND BLOCK #3 (POLL response, empty, end of transfer)
+gateway to VMC: [1dh, 00h, 03h, 20h]
 data from VMC: [00h]  // ACK
 
 // ---- VMC -> SENVEND Terminal (audit data) ----

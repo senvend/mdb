@@ -92,7 +92,7 @@ The example sends the price update file from [Setting Prices in the VMC](#settin
 |POLL|FTL_SEND_BLOCK(Dest=`00h`, Block=`02h`, Data=31 bytes)|Last data block (ends with the `DXE` record)|
 |POLL|FTL_SEND_BLOCK(Dest=`00h`, Block=`03h`, Data=31 × `00h`)|Terminating block, transfer is complete|
 
-Instead of a **POLL**, the VMC may also request each following block with another `FTL_OK_TO_SEND`. The terminal answers it with the next block in the same way.
+**Instead of a POLL**, the VMC may also request each following block with another `FTL_OK_TO_SEND`. The terminal answers it with the next block in the same way.
 
 If the VMC can't accept the file, it answers the `FTL_REQ_TO_SEND` with `FTL_RETRY_DENY(Dest=10h, Src=00h, Retry Delay)` instead of `FTL_OK_TO_SEND`. The terminal **ACK**s it and drops the offered file. The same applies, if the VMC sends `FTL_RETRY_DENY` during the transfer.
 
